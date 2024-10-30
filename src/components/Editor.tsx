@@ -21,6 +21,7 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import ListItem from '@tiptap/extension-list-item'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
+import { useEditorStore } from '../store/editorStore';
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -43,6 +44,8 @@ const CustomTextStyle = TextStyle.extend({
 });
 
 export const Editor = () => {
+  const { setEditorContent } = useEditorStore();
+
   const editor = useEditor({
     extensions: [
       Document,
@@ -84,6 +87,9 @@ export const Editor = () => {
       <h1>Welcome to the Template Editor</h1>
       <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
     `,
+    onUpdate: ({ editor }) => {
+      setEditorContent(editor.getHTML());
+    },
   });
 
   return (

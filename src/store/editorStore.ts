@@ -7,6 +7,8 @@ interface EditorStore {
   setVariables: (variables: Variable[]) => void;
   setTemplate: (template: Template) => void;
   updateVariable: (id: string, value: string) => void;
+  editorContent: string;
+  setEditorContent: (content: string) => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
@@ -20,4 +22,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
         v.id === id ? { ...v, value } : v
       ),
     })),
+  editorContent: '',
+  setEditorContent: (content) => set({ editorContent: content }),
 }));
