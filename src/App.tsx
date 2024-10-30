@@ -3,9 +3,10 @@ import Editor from './components/Editor';
 import VariableForm from './components/VariableForm';
 import { useEditorStore } from './store/editorStore';
 import { FileText } from 'lucide-react';
+import { Variable } from './types';
 
 // Mock data for demonstration
-const MOCK_VARIABLES = [
+const MOCK_VARIABLES: Variable[] = [
   { id: '1', name: 'recipientName', type: 'text', label: 'Recipient Name', value: '' },
   { id: '2', name: 'companyName', type: 'text', label: 'Company Name', value: '' },
   { id: '3', name: 'date', type: 'date', label: 'Date', value: '' },
@@ -47,7 +48,7 @@ function App() {
           <div className="lg:col-span-2">
             <Editor />
           </div>
-          <div>
+          <div className="space-y-8">
             <VariableForm />
           </div>
         </div>

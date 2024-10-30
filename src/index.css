@@ -24,3 +24,32 @@
   height: 0;
   pointer-events: none;
 }
+
+.resize-image {
+  display: inline-block;
+  position: relative;
+}
+.resize-image img {
+  max-width: 100%;
+  height: auto;
+}
+.resize-image.ProseMirror-selectednode::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #0096fd;
+}
+.resize-image .resize-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #0096fd;
+  border: 1px solid white;
+}
+.resize-image .resize-handle.top-left { top: -4px; left: -4px; cursor: nw-resize; }
+.resize-image .resize-handle.top-right { top: -4px; right: -4px; cursor: ne-resize; }
+.resize-image .resize-handle.bottom-left { bottom: -4px; left: -4px; cursor: sw-resize; }
+.resize-image .resize-handle.bottom-right { bottom: -4px; right: -4px; cursor: se-resize; }

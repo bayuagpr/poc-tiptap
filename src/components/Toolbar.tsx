@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Bold, Italic, Underline, Strikethrough,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  List, ListOrdered, Type, Minus
+  List, ListOrdered, Minus, Undo2, Redo2
 } from 'lucide-react';
 import { Editor } from '@tiptap/react';
 
@@ -22,7 +22,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editor }) => {
       <select 
         onChange={e => editor.chain().focus().setFontFamily(e.target.value).run()}
         className="h-8 rounded border border-gray-300 text-sm"
-        value={editor.getAttributes('textStyle').fontFamily}
+        value={editor.getAttributes('textStyle').fontFamily || ''}
       >
         <option value="Arial">Arial</option>
         <option value="Times New Roman">Times New Roman</option>
@@ -146,6 +146,24 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editor }) => {
         className="p-1 rounded hover:bg-gray-200"
       >
         <Minus className="w-4 h-4" />
+      </button>
+
+      <div className="h-4 w-px bg-gray-300 mx-1" />
+
+      <button
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().undo()}
+        className={`p-1 rounded hover:bg-gray-200 disabled:opacity-50`}
+      >
+        <Undo2 className="w-4 h-4" />
+      </button>
+
+      <button
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().redo()}
+        className={`p-1 rounded hover:bg-gray-200 disabled:opacity-50`}
+      >
+        <Redo2 className="w-4 h-4" />
       </button>
     </div>
   );
