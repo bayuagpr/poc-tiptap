@@ -4,7 +4,6 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import FontFamily from "@tiptap/extension-font-family";
 import TextStyle from "@tiptap/extension-text-style";
-import Image from '@tiptap/extension-image'
 import ImageResize from 'tiptap-extension-resize-image';
 import { Toolbar } from "./Toolbar";
 import { VariableSelector } from "./VariableSelector";
@@ -76,10 +75,6 @@ export const Editor = () => {
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
-      }),
-      Image.configure({
-        inline: true,
-        allowBase64: true,
       }),
       ImageResize,
     ],
