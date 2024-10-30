@@ -16,7 +16,7 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({ editor }) =>
     editor
       .chain()
       .focus()
-      .insertContent(`[${variable}]`)
+      .insertContent(`{{${variable}}}`)
       .run();
   };
 

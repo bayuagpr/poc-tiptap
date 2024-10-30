@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Bold, Italic, Underline, Strikethrough,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  List, ListOrdered, Minus, Undo2, Redo2
+  List, ListOrdered, Undo2, Redo2
 } from 'lucide-react';
 import { Editor } from '@tiptap/react';
 
@@ -140,13 +140,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ editor }) => {
       </button>
 
       <div className="h-4 w-px bg-gray-300 mx-1" />
-
-      <button
-        onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        className="p-1 rounded hover:bg-gray-200"
-      >
-        <Minus className="w-4 h-4" />
-      </button>
 
       <div className="h-4 w-px bg-gray-300 mx-1" />
 
