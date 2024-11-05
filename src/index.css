@@ -53,3 +53,11 @@
 .resize-image .resize-handle.top-right { top: -4px; right: -4px; cursor: ne-resize; }
 .resize-image .resize-handle.bottom-left { bottom: -4px; left: -4px; cursor: sw-resize; }
 .resize-image .resize-handle.bottom-right { bottom: -4px; right: -4px; cursor: se-resize; }
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

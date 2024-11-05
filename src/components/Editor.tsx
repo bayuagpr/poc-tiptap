@@ -4,7 +4,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import FontFamily from "@tiptap/extension-font-family";
 import TextStyle from "@tiptap/extension-text-style";
-import ImageResize from 'tiptap-extension-resize-image';
+import {ImageResize} from './ImageResize';
 import { Toolbar } from "./Toolbar";
 import { VariableSelector } from "./VariableSelector";
 import { ImagePicker } from "./ImagePicker";
@@ -21,6 +21,8 @@ import ListItem from '@tiptap/extension-list-item'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
 import { useEditorStore } from '../store/editorStore';
+import Dropcursor from "@tiptap/extension-dropcursor";
+import Placeholder from "@tiptap/extension-placeholder";
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -75,8 +77,17 @@ export const Editor = () => {
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
+        alignments: ["left", "center", "right", "justify"],
       }),
-      ImageResize,
+      ImageResize.configure({
+        allowBase64: true,
+      }),
+      Dropcursor.configure({
+        width: 2,
+      }),
+      Placeholder.configure({
+        placeholder: 'Write your admission letter template here...',
+      }),
     ],
     content: `
       <h1>Welcome to the Template Editor</h1>
