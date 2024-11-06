@@ -36,6 +36,9 @@ export default Image.extend({
       height: {
         default: null,
       },
+      draggable: {
+        default: true
+      },
       align: {
         default: 'left',
         parseHTML: element => {

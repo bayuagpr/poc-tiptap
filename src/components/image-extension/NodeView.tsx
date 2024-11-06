@@ -146,11 +146,27 @@ export const NodeView: React.FC<ImageProps> = ({
       className={`image-node ${selected ? 'selected' : ''}`}
       style={{
         display: 'block',
-        position: 'relative'
+        position: 'relative',
+        cursor: 'default',
       }}
       onClick={() => setSelected(true)}
     >
       {renderControls()}
+      {!node.attrs.float && (
+        <div 
+          className="drag-handle"
+          data-drag-handle
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '100%',
+            cursor: 'move',
+            zIndex: 1,
+          }}
+        />
+      )}
       <Component {...componentProps}>
         <img
           src={node.attrs.src}
@@ -161,6 +177,7 @@ export const NodeView: React.FC<ImageProps> = ({
             height: '100%',
             objectFit: 'contain'
           }}
+          draggable={false}
         />
       </Component>
     </NodeViewWrapper>
