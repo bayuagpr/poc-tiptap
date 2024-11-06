@@ -30,7 +30,12 @@ export const ImagePicker = ({ editor }: ImagePickerProps) => {
 
   const insertImage = (base64: string) => {
     if (editor) {
-      editor.chain().focus().setImage({ src: base64 }).run();
+      // editor.chain().focus().setImage({ src: base64 }).run();
+      editor.commands.setImage({
+        src: base64,
+        align: 'center',
+        float: false
+      })
     }
   };
 

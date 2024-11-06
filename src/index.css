@@ -61,3 +61,60 @@
   height: 0;
   pointer-events: none;
 }
+
+.image-node {
+  position: relative;
+  max-width: 100%;
+}
+
+.image-node.selected img {
+  outline: 2px solid #0096fd;
+}
+
+.image-node img {
+  max-width: 100%;
+  height: auto;
+}
+
+.image-controls {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-controls button {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-controls button:hover {
+  background: #f0f0f0;
+}
+
+.image-controls button.active {
+  background: #e0e0e0;
+}
+
+/* Add basic SVG icons */
+.image-controls svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
