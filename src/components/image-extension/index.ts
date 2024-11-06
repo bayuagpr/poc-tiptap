@@ -62,12 +62,39 @@ export default Image.extend({
       },
       float: {
         default: false,
+        parseHTML: element => {
+          return element.style.position === 'absolute'
+        },
+        renderHTML: attributes => {
+          if (!attributes.float) return {}
+          return {
+            style: 'position: absolute;'
+          }
+        }
       },
       left: {
         default: 0,
+        parseHTML: element => {
+          return parseInt(element.style.left) || 0
+        },
+        renderHTML: attributes => {
+          if (!attributes.float) return {}
+          return {
+            style: `left: ${attributes.left}px;`
+          }
+        }
       },
       top: {
         default: 0,
+        parseHTML: element => {
+          return parseInt(element.style.top) || 0
+        },
+        renderHTML: attributes => {
+          if (!attributes.float) return {}
+          return {
+            style: `top: ${attributes.top}px;`
+          }
+        }
       }
     }
   },

@@ -45,6 +45,7 @@ export const NodeView: React.FC<ImageProps> = ({
 }) => {
   const [selected, setSelected] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<HTMLElement | null>(null);
 
   const handleResize = (_: any, __: any, ref: HTMLElement) => {
     updateAttributes({
@@ -70,13 +71,18 @@ export const NodeView: React.FC<ImageProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    editorRef.current = document.querySelector('.ProseMirror');
+  }, []);
+
   const Component = node.attrs.float ? Rnd : Resizable
   const componentProps = node.attrs.float ? {
     position: { x: node.attrs.left, y: node.attrs.top },
     onDragStop: handleDrag,
     enableResizing: true,
     onResize: handleResize,
-    style: { maxWidth: '100%' }
+    maxWidth: '100%',
+    bounds: editorRef.current === null ? undefined : editorRef.current,
   } : {
     size: { 
       width: node.attrs.width || 'auto',
