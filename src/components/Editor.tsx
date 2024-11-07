@@ -24,6 +24,7 @@ import History from '@tiptap/extension-history'
 import { useEditorStore } from '../store/editorStore';
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
+import { Box, Flex } from "@chakra-ui/react";
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -59,12 +60,12 @@ export const Editor = () => {
       Strike,
       BulletList.configure({
         HTMLAttributes: {
-          class: "list-disc pl-[40px]",
+          style: 'list-style-type: disc; padding-left: 40px;',
         },
       }),
       OrderedList.configure({
         HTMLAttributes: {
-          class: "list-decimal pl-[40px]",
+          style: 'list-style-type: decimal; padding-left: 40px;',
         },
       }),
       ListItem,
@@ -100,28 +101,31 @@ export const Editor = () => {
     },
     editorProps: {
       attributes: {
-        class: 'min-h-[1040px] w-[800px]',
+        style: 'min-height: 1040px; width: 800px;',
       },
     },
   });
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+    <Box w="full" bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden">
       <Toolbar editor={editor} />
-      <div className="flex">
-        <div className="flex-1">
+      <Flex>
+        <Box flex="1">
           <EditorContent
             editor={editor}
-            className="prose max-w-none p-8 mx-auto bg-white focus:outline-none"
+            className="prose max-w-none"
             style={{
+              padding: "2rem",
+              margin: "0 auto",
+              background: "white",
               boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px'
             }}
           />
-        </div>
+        </Box>
         <ImagePicker editor={editor} />
-      </div>
+      </Flex>
       <VariableSelector editor={editor} />
-    </div>
+    </Box>
   );
 };
 
