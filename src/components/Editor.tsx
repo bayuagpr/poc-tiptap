@@ -4,7 +4,6 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import FontFamily from "@tiptap/extension-font-family";
 import TextStyle from "@tiptap/extension-text-style";
-// import {ImageResize} from './ImageResize';
 import ImageExtension from './image-extension';
 import { Toolbar } from "./Toolbar";
 import { VariableSelector } from "./VariableSelector";
@@ -101,9 +100,6 @@ export const Editor = ({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"],
       }),
-      // ImageResize.configure({
-      //   allowBase64: true,
-      // }),
       ImageExtension,
       Dropcursor.configure({
         width: 2,
