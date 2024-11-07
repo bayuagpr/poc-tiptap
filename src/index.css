@@ -17,6 +17,24 @@
   position: relative;
 }
 
+.ProseMirror[data-watermark] {
+  position: relative;
+}
+
+.ProseMirror[data-watermark]::before {
+  content: attr(data-watermark-text);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 4em;
+  opacity: var(--watermark-opacity);
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.2);
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
