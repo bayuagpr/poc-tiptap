@@ -4,7 +4,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import FontFamily from "@tiptap/extension-font-family";
 import TextStyle from "@tiptap/extension-text-style";
-import ImageResize from 'tiptap-extension-resize-image';
+import ImageExtension from './image-extension';
 import { Toolbar } from "./Toolbar";
 import { VariableSelector } from "./VariableSelector";
 import { ImagePicker } from "./ImagePicker";
@@ -21,6 +21,11 @@ import ListItem from '@tiptap/extension-list-item'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
 import { useEditorStore } from '../store/editorStore';
+import Dropcursor from "@tiptap/extension-dropcursor";
+import Placeholder from "@tiptap/extension-placeholder";
+import { Box, Flex } from "@chakra-ui/react";
+import { paperSizes } from '../utils/paperUtils';
+import { wrapContentWithPageConfig } from '../utils/editorUtils';
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -42,8 +47,26 @@ const CustomTextStyle = TextStyle.extend({
   },
 });
 
-export const Editor = () => {
+interface EditorProps {
+  paperSize?: keyof typeof paperSizes;
+  dpi?: keyof typeof paperSizes.a4.pixels;
+  orientation?: 'portrait' | 'landscape';
+}
+
+export const Editor = ({ 
+  paperSize = 'letter',
+  dpi = 'dpi96',
+  orientation = 'portrait'
+}: EditorProps) => {
   const { setEditorContent } = useEditorStore();
+
+  const PADDING = 32; // 2rem = 32px
+
+  const dimensions = paperSizes[paperSize].pixels[dpi];
+  const pageSize = {
+    width: orientation === 'portrait' ? dimensions.width : dimensions.height,
+    height: orientation === 'portrait' ? dimensions.height : dimensions.width
+  };
 
   const editor = useEditor({
     extensions: [
@@ -56,12 +79,12 @@ export const Editor = () => {
       Strike,
       BulletList.configure({
         HTMLAttributes: {
-          class: "list-disc pl-[40px]",
+          style: 'list-style-type: disc; padding-left: 40px;',
         },
       }),
       OrderedList.configure({
         HTMLAttributes: {
-          class: "list-decimal pl-[40px]",
+          style: 'list-style-type: decimal; padding-left: 40px;',
         },
       }),
       ListItem,
@@ -75,32 +98,57 @@ export const Editor = () => {
       }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
+        alignments: ["left", "center", "right", "justify"],
       }),
-      ImageResize,
+      ImageExtension,
+      Dropcursor.configure({
+        width: 2,
+      }),
+      Placeholder.configure({
+        placeholder: 'Write your admission letter template here...',
+      }),
     ],
     content: `
       <h1>Welcome to the Template Editor</h1>
       <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
     `,
     onUpdate: ({ editor }) => {
-      setEditorContent(editor.getHTML());
+      const wrappedContent = wrapContentWithPageConfig(editor.getHTML(), {
+        paperSize,
+        dpi,
+        orientation,
+        padding: PADDING
+      });
+      setEditorContent(wrappedContent);
+    },
+    editorProps: {
+      attributes: {
+        style: `min-height: ${pageSize.height - (PADDING * 2)}px; width: ${pageSize.width - (PADDING * 2)}px;`,
+      },
     },
   });
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden">
+    <Box w="full" bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden">
       <Toolbar editor={editor} />
-      <div className="flex">
-        <div className="flex-1">
+      <Flex>
+        <Box padding="2rem" flex="1">
           <EditorContent
             editor={editor}
-            className="prose max-w-none p-8 min-h-[500px] focus:outline-none"
+            className="prose max-w-none"
+            style={{
+              padding: "2rem",
+              margin: "0 auto",
+              width: `${pageSize.width}px`,
+              background: "white",
+              boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px'
+            }}
           />
-        </div>
+        </Box>
         <ImagePicker editor={editor} />
-      </div>
+      </Flex>
       <VariableSelector editor={editor} />
-    </div>
+    </Box>
   );
 };
 

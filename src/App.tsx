@@ -6,6 +6,15 @@ import { FileText } from 'lucide-react';
 import { Variable } from './types';
 import DOMPurify from 'dompurify';
 import { saveFile } from './utils/saveFile';
+import { 
+  Box, 
+  Container, 
+  Flex, 
+  Heading, 
+  Button, 
+  Grid, 
+  VStack,
+} from '@chakra-ui/react';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
@@ -32,45 +41,56 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <FileText className="w-8 h-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">Template Editor</h1>
-            </div>
-            <button
+    <Box minH="100vh" bg="gray.50">
+      <Box as="header" bg="white" boxShadow="sm">
+        <Container maxW="7xl" px={4} py={4}>
+          <Flex justify="space-between" align="center">
+            <Flex align="center">
+              <FileText style={{ width: "2rem", height: "2rem", color: "blue.600" }} />
+              <Heading as="h1" ml={2} size="lg">Template Editor</Heading>
+            </Flex>
+            <Button
               onClick={() => saveFile(editorContent)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              colorScheme="blue"
+              _hover={{ bg: 'blue.700' }}
+              _focus={{ ring: 2, ringOffset: 2, ringColor: 'blue.500' }}
             >
               Save Template
-            </button>
-          </div>
-        </div>
-      </header>
+            </Button>
+          </Flex>
+        </Container>
+      </Box>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <Editor />
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Preview</h2>
-              <div className="prose max-w-none">
-                <div 
-                  dangerouslySetInnerHTML={{ 
-                    __html: DOMPurify.sanitize(getPreviewContent()) 
-                  }} 
-                />
-              </div>
-            </div>
-          </div>
-          <div className="space-y-8">
+      <Container as="main" maxW="1400px" px={4} py={8}>
+        <Grid templateColumns={{ base: "1fr", lg: "auto 300px" }} gap={8}>
+          <VStack spacing={8} align="stretch">
+            <Box overflow="auto">
+              <Editor />
+            </Box>
+            <Box bg="white" borderRadius="lg" boxShadow="base" p={6}>
+              <Heading as="h2" size="md" mb={4}>Preview</Heading>
+              <Box>
+                <Box
+                  bg="white"
+                  boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px"
+                  w="fit-content"
+                >
+                    <div
+                      style={{ width: "fit-content" }}
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(getPreviewContent())
+                      }}
+                    />
+                </Box>
+              </Box>
+            </Box>
+          </VStack>
+          <VStack spacing={8} align="stretch">
             <VariableForm />
-          </div>
-        </div>
-      </main>
-    </div>
+          </VStack>
+        </Grid>
+      </Container>
+    </Box>
   );
 }
 
