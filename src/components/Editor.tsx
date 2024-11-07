@@ -100,7 +100,7 @@ export const Editor = () => {
     },
     editorProps: {
       attributes: {
-        class: 'min-h-[1056px] w-[816px]',
+        class: 'min-h-[1040px] w-[800px]',
       },
     },
   });
