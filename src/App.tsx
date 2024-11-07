@@ -50,27 +50,32 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <div className="relative">
+      <main className="max-w-[1400px] mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto,300px] gap-8">
+          <div className="space-y-8">
+            <div className="relative overflow-x-auto">
               <Editor />
             </div>
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-medium text-gray-900 mb-4">Preview</h2>
-              <div 
-                className="prose max-w-none relative mx-auto" 
-                style={{ 
-                  minHeight: '1056px',  // 11 inches * 96 DPI
-                  // width: '816px',       // 8.5 inches * 96 DPI
-                  backgroundColor: 'white'
-                }}
-              >
+              <div className="overflow-x-auto">
                 <div 
-                  dangerouslySetInnerHTML={{ 
-                    __html: DOMPurify.sanitize(getPreviewContent()) 
-                  }} 
-                />
+                  className="prose max-w-none mx-auto p-8" 
+                  style={{ 
+                    minHeight: '1056px',  // 11 inches * 96 DPI
+                    width: '816px',       // 8.5 inches * 96 DPI
+                    backgroundColor: 'white',
+                    boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px'
+                  }}
+                >
+                  <div className="relative">
+                    <div 
+                      dangerouslySetInnerHTML={{ 
+                      __html: DOMPurify.sanitize(getPreviewContent()) 
+                      }} 
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -13,8 +13,8 @@
 }
 
 .ProseMirror {
-  min-height: 500px;
   outline: none;
+  position: relative;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -63,7 +63,6 @@
 }
 
 .image-node {
-  position: relative;
   max-width: 100%;
 }
 

@@ -4,6 +4,8 @@ import { useState } from 'react';
 interface Image {
   id: string;
   base64: string;
+  width: number;
+  height: number;
 }
 
 interface ImagePickerProps {
@@ -18,23 +20,31 @@ export const ImagePicker = ({ editor }: ImagePickerProps) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const newImage = {
-          id: crypto.randomUUID(),
-          base64: reader.result as string,
+        const img = new Image();
+        img.onload = () => {
+          const newImage = {
+            id: crypto.randomUUID(),
+            base64: reader.result as string,
+            width: img.width,
+            height: img.height
+          };
+          setImages(prev => [...prev, newImage]);
         };
-        setImages(prev => [...prev, newImage]);
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const insertImage = (base64: string) => {
+  const insertImage = (base64: string, width: number, height: number) => {
     if (editor) {
       // editor.chain().focus().setImage({ src: base64 }).run();
       editor.commands.setImage({
         src: base64,
         align: 'center',
-        float: false
+        float: false,
+        width,
+        height
       })
     }
   };
@@ -56,7 +66,7 @@ export const ImagePicker = ({ editor }: ImagePickerProps) => {
             src={image.base64}
             alt="Uploaded image"
             className="w-full h-24 object-cover rounded cursor-pointer hover:opacity-80"
-            onClick={() => insertImage(image.base64)}
+            onClick={() => insertImage(image.base64, image.width, image.height)}
           />
         ))}
       </div>

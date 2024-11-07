@@ -98,6 +98,11 @@ export const Editor = () => {
     onUpdate: ({ editor }) => {
       setEditorContent(editor.getHTML());
     },
+    editorProps: {
+      attributes: {
+        class: 'min-h-[1056px] w-[816px]',
+      },
+    },
   });
 
   return (
@@ -107,7 +112,10 @@ export const Editor = () => {
         <div className="flex-1">
           <EditorContent
             editor={editor}
-            className="prose max-w-none p-8 min-h-[500px] focus:outline-none"
+            className="prose max-w-none p-8 mx-auto bg-white focus:outline-none"
+            style={{
+              boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px'
+            }}
           />
         </div>
         <ImagePicker editor={editor} />

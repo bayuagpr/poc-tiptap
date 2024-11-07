@@ -93,12 +93,18 @@ export default Image.extend({
           return parseInt(element.style.top) || 0
         },
         renderHTML: attributes => {
-          if (!attributes.float) return {}
+          if (!attributes.float) return {};
           return {
-            style: `top: ${attributes.top}px;`
+            style: `top: ${attributes.top + attributes.translateY}px;`,
           }
         }
-      }
+      },
+      translateX: {
+        default: 0,
+      },
+      translateY: {
+        default: 0,
+      },
     }
   },
 
