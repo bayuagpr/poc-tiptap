@@ -26,6 +26,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { Box, Flex } from "@chakra-ui/react";
 import { paperSizes } from '../utils/paperUtils';
 import { wrapContentWithPageConfig } from '../utils/editorUtils';
+import { Watermark } from './watermark-extension';
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -51,12 +52,17 @@ interface EditorProps {
   paperSize?: keyof typeof paperSizes;
   dpi?: keyof typeof paperSizes.a4.pixels;
   orientation?: 'portrait' | 'landscape';
+  watermark?: {
+    text: string;
+    opacity: number;
+  };
 }
 
 export const Editor = ({ 
   paperSize = 'letter',
   dpi = 'dpi96',
-  orientation = 'portrait'
+  orientation = 'portrait',
+  watermark = { text: 'CONFIDENTIAL', opacity: 0.3 }
 }: EditorProps) => {
   const { setEditorContent } = useEditorStore();
 
@@ -107,7 +113,19 @@ export const Editor = ({
       Placeholder.configure({
         placeholder: 'Write your admission letter template here...',
       }),
+      Watermark.configure({
+        text: watermark.text,
+        opacity: watermark.opacity
+      }),
     ],
+    onBeforeCreate: ({ editor }) => {
+      setTimeout(() => {
+        editor.commands.setWatermark({
+          text: watermark.text,
+          opacity: watermark.opacity
+        })
+      }, 0)
+    },
     content: `
       <h1>Welcome to the Template Editor</h1>
       <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
@@ -118,7 +136,7 @@ export const Editor = ({
         dpi,
         orientation,
         padding: PADDING
-      });
+      }, watermark.text, watermark.opacity);
       setEditorContent(wrappedContent);
     },
     editorProps: {
