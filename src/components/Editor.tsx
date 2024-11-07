@@ -25,6 +25,8 @@ import { useEditorStore } from '../store/editorStore';
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Box, Flex } from "@chakra-ui/react";
+import { paperSizes } from '../utils/paperUtils';
+import { wrapContentWithPageConfig } from '../utils/editorUtils';
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -46,8 +48,26 @@ const CustomTextStyle = TextStyle.extend({
   },
 });
 
-export const Editor = () => {
+interface EditorProps {
+  paperSize?: keyof typeof paperSizes;
+  dpi?: keyof typeof paperSizes.a4.pixels;
+  orientation?: 'portrait' | 'landscape';
+}
+
+export const Editor = ({ 
+  paperSize = 'letter',
+  dpi = 'dpi96',
+  orientation = 'portrait'
+}: EditorProps) => {
   const { setEditorContent } = useEditorStore();
+
+  const PADDING = 32; // 2rem = 32px
+
+  const dimensions = paperSizes[paperSize].pixels[dpi];
+  const pageSize = {
+    width: orientation === 'portrait' ? dimensions.width : dimensions.height,
+    height: orientation === 'portrait' ? dimensions.height : dimensions.width
+  };
 
   const editor = useEditor({
     extensions: [
@@ -97,11 +117,17 @@ export const Editor = () => {
       <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
     `,
     onUpdate: ({ editor }) => {
-      setEditorContent(editor.getHTML());
+      const wrappedContent = wrapContentWithPageConfig(editor.getHTML(), {
+        paperSize,
+        dpi,
+        orientation,
+        padding: PADDING
+      });
+      setEditorContent(wrappedContent);
     },
     editorProps: {
       attributes: {
-        style: 'min-height: 1040px; width: 800px;',
+        style: `min-height: ${pageSize.height - (PADDING * 2)}px; width: ${pageSize.width - (PADDING * 2)}px;`,
       },
     },
   });
@@ -110,13 +136,14 @@ export const Editor = () => {
     <Box w="full" bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden">
       <Toolbar editor={editor} />
       <Flex>
-        <Box flex="1">
+        <Box padding="2rem" flex="1">
           <EditorContent
             editor={editor}
             className="prose max-w-none"
             style={{
               padding: "2rem",
               margin: "0 auto",
+              width: `${pageSize.width}px`,
               background: "white",
               boxShadow: 'rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px'
             }}
