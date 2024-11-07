@@ -3,6 +3,7 @@ import { NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import React, { useEffect, useRef, useState } from "react";
 import { Resizable } from "re-resizable";
 import { Rnd } from "react-rnd";
+import { Box, IconButton, Image, Flex } from "@chakra-ui/react";
 
 interface ImageProps extends NodeViewProps {
   node: any;
@@ -114,31 +115,37 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
     if (!selected) return null;
 
     return (
-      <div className="image-controls">
-        <button
-          className={`align-btn ${node.attrs.align === "left" ? "active" : ""}`}
+      <Flex className="image-controls" gap={1}>
+        <IconButton
+          aria-label="Align left"
+          icon={<AlignLeftIcon />}
+          size="sm"
+          colorScheme="gray"
+          variant={node.attrs.align === "left" ? "solid" : "ghost"}
           onClick={() => updateAttributes({ align: "left" })}
-        >
-          <AlignLeftIcon />
-        </button>
-        <button
-          className={`align-btn ${
-            node.attrs.align === "center" ? "active" : ""
-          }`}
+        />
+        <IconButton
+          aria-label="Align center"
+          icon={<AlignCenterIcon />}
+          size="sm"
+          colorScheme="gray"
+          variant={node.attrs.align === "center" ? "solid" : "ghost"}
           onClick={() => updateAttributes({ align: "center" })}
-        >
-          <AlignCenterIcon />
-        </button>
-        <button
-          className={`align-btn ${
-            node.attrs.align === "right" ? "active" : ""
-          }`}
+        />
+        <IconButton
+          aria-label="Align right"
+          icon={<AlignRightIcon />}
+          size="sm"
+          colorScheme="gray"
+          variant={node.attrs.align === "right" ? "solid" : "ghost"}
           onClick={() => updateAttributes({ align: "right" })}
-        >
-          <AlignRightIcon />
-        </button>
-        <button
-          className="float-btn"
+        />
+        <IconButton
+          aria-label="Toggle float"
+          icon={node.attrs.float ? <LockIcon /> : <FloatIcon />}
+          size="sm"
+          colorScheme="gray"
+          variant={node.attrs.float ? "solid" : "ghost"}
           onClick={() => {
             const newFloat = !node.attrs.float;
             updateAttributes({
@@ -161,10 +168,8 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
               }, 100);
             }
           }}
-        >
-          {node.attrs.float ? <LockIcon /> : <FloatIcon />}
-        </button>
-      </div>
+        />
+      </Flex>
     );
   };
 
@@ -172,43 +177,36 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
     <NodeViewWrapper
       ref={containerRef}
       className={`image-node ${selected ? "selected" : ""}`}
-      style={{
-        display: "block",
-        cursor: "default",
-      }}
       onClick={() => setSelected(true)}
     >
-      <div className="relative">
+      <Box position="relative">
         {renderControls()}
         {!node.attrs.float && (
-          <div
+          <Box
             className="drag-handle"
             data-drag-handle
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              height:
-                containerRef.current?.querySelector("img")?.clientHeight +
-                  "px" || "100px",
-              cursor: "move",
-              zIndex: 1,
-            }}
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            height={
+              containerRef.current?.querySelector("img")?.clientHeight +
+                "px" || "100px"
+            }
+            cursor="move"
+            zIndex={1}
           />
         )}
-      </div>
+      </Box>
 
       <Component {...componentProps}>
-        <img
+        <Image
           src={node.attrs.src}
           alt={node.attrs.alt}
           title={node.attrs.title}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-          }}
+          w="100%"
+          h="100%"
+          objectFit="contain"
           draggable={false}
         />
       </Component>
