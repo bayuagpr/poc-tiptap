@@ -20,7 +20,6 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import ListItem from '@tiptap/extension-list-item'
 import HardBreak from '@tiptap/extension-hard-break'
 import History from '@tiptap/extension-history'
-import { useEditorStore } from '../store/editorStore';
 import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Box, Flex } from "@chakra-ui/react";
@@ -56,16 +55,21 @@ interface EditorProps {
     text: string;
     opacity: number;
   };
+  content?: string;
+  onChange?: (content: string) => void;
 }
 
 export const Editor = ({ 
   paperSize = 'letter',
   dpi = 'dpi96',
   orientation = 'portrait',
-  watermark = { text: 'CONFIDENTIAL', opacity: 0.3 }
+  watermark = { text: 'CONFIDENTIAL', opacity: 0.3 },
+  content = `
+      <h1>Welcome to the Template Editor</h1>
+      <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
+    `,
+  onChange
 }: EditorProps) => {
-  const { setEditorContent } = useEditorStore();
-
   const PADDING = 32; // 2rem = 32px
 
   const dimensions = paperSizes[paperSize].pixels[dpi];
@@ -126,10 +130,7 @@ export const Editor = ({
         })
       }, 0)
     },
-    content: `
-      <h1>Welcome to the Template Editor</h1>
-      <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
-    `,
+    content,
     onUpdate: ({ editor }) => {
       const wrappedContent = wrapContentWithPageConfig(editor.getHTML(), {
         paperSize,
@@ -137,7 +138,7 @@ export const Editor = ({
         orientation,
         padding: PADDING
       }, watermark.text, watermark.opacity);
-      setEditorContent(wrappedContent);
+      onChange?.(wrappedContent);
     },
     editorProps: {
       attributes: {

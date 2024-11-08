@@ -19,4 +19,11 @@ interface Window {
       accept: Record<string, string[]>;
     }>;
   }): Promise<FileSystemFileHandle>;
+  showOpenFilePicker(options?: {
+    types?: Array<{
+      description: string;
+      accept: Record<string, string[]>;
+    }>;
+    multiple?: boolean;
+  }): Promise<FileSystemFileHandle[]>;
 } 

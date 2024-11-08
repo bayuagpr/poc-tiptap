@@ -4,8 +4,7 @@ import VariableForm from './components/VariableForm';
 import { useEditorStore } from './store/editorStore';
 import { FileText } from 'lucide-react';
 import { Variable } from './types';
-import DOMPurify from 'dompurify';
-import { saveFile } from './utils/saveFile';
+import { saveFile, importFile } from './utils/saveFile';
 import { 
   Box, 
   Container, 
@@ -15,6 +14,7 @@ import {
   Grid, 
   VStack,
 } from '@chakra-ui/react';
+import { Preview } from './components/Preview';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
@@ -24,20 +24,15 @@ const MOCK_VARIABLES: Variable[] = [
 ];
 
 function App() {
-  const { setVariables, editorContent, variables } = useEditorStore();
+  const { setVariables, editorContent, setEditorContent } = useEditorStore();
 
   useEffect(() => {
-    // In a real app, this would be fetched from your API
     setVariables(MOCK_VARIABLES);
   }, []);
 
-  const getPreviewContent = () => {
-    let previewText = editorContent;
-    variables.forEach((variable) => {
-      const regex = new RegExp(`{{\\s*${variable.name}\\s*}}`, 'g');
-      previewText = previewText.replace(regex, variable.value || `{{${variable.label}}}`);
-    });
-    return previewText;
+  const handleImport = async () => {
+    const content = await importFile();
+    if (content) setEditorContent(content);
   };
 
   return (
@@ -49,14 +44,19 @@ function App() {
               <FileText style={{ width: "2rem", height: "2rem", color: "blue.600" }} />
               <Heading as="h1" ml={2} size="lg">Template Editor</Heading>
             </Flex>
-            <Button
-              onClick={() => saveFile(editorContent)}
-              colorScheme="blue"
-              _hover={{ bg: 'blue.700' }}
-              _focus={{ ring: 2, ringOffset: 2, ringColor: 'blue.500' }}
-            >
-              Save Template
-            </Button>
+            <Flex gap={2}>
+              <Button onClick={handleImport} colorScheme="gray">
+                Import Template
+              </Button>
+              <Button
+                onClick={() => saveFile(editorContent)}
+                colorScheme="blue"
+                _hover={{ bg: 'blue.700' }}
+                _focus={{ ring: 2, ringOffset: 2, ringColor: 'blue.500' }}
+              >
+                Save Template
+              </Button>
+            </Flex>
           </Flex>
         </Container>
       </Box>
@@ -65,25 +65,11 @@ function App() {
         <Grid templateColumns={{ base: "1fr", lg: "auto 300px" }} gap={8}>
           <VStack spacing={8} align="stretch">
             <Box overflow="auto">
-              <Editor />
+              <Editor 
+                onChange={setEditorContent}
+              />
             </Box>
-            <Box bg="white" borderRadius="lg" boxShadow="base" p={6}>
-              <Heading as="h2" size="md" mb={4}>Preview</Heading>
-              <Box>
-                <Box
-                  bg="white"
-                  boxShadow="rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 1px 6px"
-                  w="fit-content"
-                >
-                    <div
-                      style={{ width: "fit-content" }}
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(getPreviewContent())
-                      }}
-                    />
-                </Box>
-              </Box>
-            </Box>
+            <Preview />
           </VStack>
           <VStack spacing={8} align="stretch">
             <VariableForm />
