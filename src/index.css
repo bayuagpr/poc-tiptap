@@ -1,15 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-@layer base {
-  .prose {
-    max-width: none;
-  }
-  
-  .prose p {
-    margin: 0;
-  }
+/* Editor styles */
+.prose {
+  max-width: none;
+}
+
+.prose p {
+  margin: 0;
 }
 
 .ProseMirror {
@@ -43,14 +45,17 @@
   pointer-events: none;
 }
 
+/* Image styles */
 .resize-image {
   display: inline-block;
   position: relative;
 }
+
 .resize-image img {
   max-width: 100%;
   height: auto;
 }
+
 .resize-image.ProseMirror-selectednode::after {
   content: '';
   position: absolute;
@@ -60,6 +65,7 @@
   bottom: 0;
   border: 1px solid #0096fd;
 }
+
 .resize-image .resize-handle {
   position: absolute;
   width: 8px;
@@ -67,6 +73,7 @@
   background-color: #0096fd;
   border: 1px solid white;
 }
+
 .resize-image .resize-handle.top-left { top: -4px; left: -4px; cursor: nw-resize; }
 .resize-image .resize-handle.top-right { top: -4px; right: -4px; cursor: ne-resize; }
 .resize-image .resize-handle.bottom-left { bottom: -4px; left: -4px; cursor: sw-resize; }
@@ -128,7 +135,6 @@
   background: #e0e0e0;
 }
 
-/* Add basic SVG icons */
 .image-controls svg {
   width: 16px;
   height: 16px;
