@@ -26,6 +26,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { paperSizes } from '../utils/paperUtils';
 import { wrapContentWithPageConfig } from '../utils/editorUtils';
 import { Watermark } from './watermark-extension';
+import { useEffect } from "react";
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -55,7 +56,7 @@ interface EditorProps {
     text: string;
     opacity: number;
   };
-  content?: string;
+  initialContent?: string;
   onChange?: (content: string) => void;
 }
 
@@ -64,7 +65,7 @@ export const Editor = ({
   dpi = 'dpi96',
   orientation = 'portrait',
   watermark = { text: 'CONFIDENTIAL', opacity: 0.3 },
-  content = `
+  initialContent: content = `
       <h1>Welcome to the Template Editor</h1>
       <p>Start editing your template here. Use the toolbar above to format your text and insert variables from the panel on the right.</p>
     `,
@@ -146,6 +147,14 @@ export const Editor = ({
       },
     },
   });
+
+  useEffect(() => {
+    console.log('content', content);
+    if (!editor) return;
+    setTimeout(() => {
+      editor.commands.setContent(content);
+    }, 0);
+  }, [content, editor]);
 
   return (
     <Box w="full" bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden">

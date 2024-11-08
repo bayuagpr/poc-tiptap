@@ -42,9 +42,8 @@ export default Image.extend({
       align: {
         default: 'left',
         parseHTML: element => {
-          const style = window.getComputedStyle(element);
-          const marginLeft = style.marginLeft;
-          const marginRight = style.marginRight;
+          const marginLeft = element.style.marginLeft;
+          const marginRight = element.style.marginRight;
           
           if (marginLeft === 'auto' && marginRight === 'auto') return 'center';
           if (marginLeft === '0px' && marginRight === 'auto') return 'left';

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Editor from './components/Editor';
 import VariableForm from './components/VariableForm';
 import { useEditorStore } from './store/editorStore';
@@ -15,6 +15,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Preview } from './components/Preview';
+import { extractContent, extractWatermarkDetails } from './utils/editorUtils';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
@@ -25,6 +26,7 @@ const MOCK_VARIABLES: Variable[] = [
 
 function App() {
   const { setVariables, editorContent, setEditorContent } = useEditorStore();
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     setVariables(MOCK_VARIABLES);
@@ -32,7 +34,10 @@ function App() {
 
   const handleImport = async () => {
     const content = await importFile();
-    if (content) setEditorContent(content);
+    if (content) {
+      setContent(content);
+      setEditorContent(content);
+    }
   };
 
   return (
@@ -66,6 +71,8 @@ function App() {
           <VStack spacing={8} align="stretch">
             <Box overflow="auto">
               <Editor 
+                initialContent={extractContent(content)}
+                watermark={extractWatermarkDetails(editorContent)}
                 onChange={setEditorContent}
               />
             </Box>
