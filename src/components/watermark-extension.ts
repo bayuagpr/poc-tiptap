@@ -1,8 +1,9 @@
 import { Extension } from '@tiptap/core'
 
 export interface WatermarkOptions {
-  text: string
-  opacity: number
+  text?: string;
+  image?: string;
+  opacity: number;
 }
 
 declare module '@tiptap/core' {
@@ -18,7 +19,8 @@ export const Watermark = Extension.create<WatermarkOptions>({
 
   addOptions() {
     return {
-      text: 'DRAFT',
+      text: undefined,
+      image: undefined,
       opacity: 0.3
     }
   },
@@ -28,7 +30,16 @@ export const Watermark = Extension.create<WatermarkOptions>({
       setWatermark: (options: Partial<WatermarkOptions>) => ({ editor }) => {
         const watermark = { ...this.options, ...options }
         editor.view.dom.style.setProperty('--watermark-opacity', watermark.opacity.toString())
-        editor.view.dom.setAttribute('data-watermark-text', watermark.text)
+        
+        if (watermark.image) {
+          editor.view.dom.style.setProperty('--watermark-image', `url(${watermark.image})`)
+          editor.view.dom.removeAttribute('data-watermark-text')
+          editor.view.dom.setAttribute('data-watermark-image', '')
+        } else if (watermark.text) {
+          editor.view.dom.removeAttribute('data-watermark-image')
+          editor.view.dom.setAttribute('data-watermark-text', watermark.text)
+        }
+        
         editor.view.dom.setAttribute('data-watermark', '')
         return true
       }
@@ -36,13 +47,13 @@ export const Watermark = Extension.create<WatermarkOptions>({
   },
 
   onUpdate() {
-    if (this.options.text) {
+    if (this.options.text || this.options.image) {
       this.editor.commands.setWatermark(this.options)
     }
   },
 
   onSelectionUpdate() {
-    if (this.options.text) {
+    if (this.options.text || this.options.image) {
       this.editor.commands.setWatermark(this.options)
     }
   }

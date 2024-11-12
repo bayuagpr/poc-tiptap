@@ -53,13 +53,13 @@ interface EditorProps {
   dpi?: keyof typeof paperSizes.a4.pixels;
   orientation?: 'portrait' | 'landscape';
   watermark?: {
-    text: string;
+    text?: string;
+    image?: string;
     opacity: number;
   };
   initialContent?: string;
   onChange?: (content: string) => void;
 }
-
 export const Editor = ({ 
   paperSize = 'letter',
   dpi = 'dpi96',
@@ -120,6 +120,7 @@ export const Editor = ({
       }),
       Watermark.configure({
         text: watermark.text,
+        image: watermark.image,
         opacity: watermark.opacity
       }),
     ],

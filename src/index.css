@@ -23,7 +23,8 @@
   position: relative;
 }
 
-.ProseMirror[data-watermark]::before {
+/* Text watermark - with rotation */
+.ProseMirror[data-watermark]:not([data-watermark-image])::before {
   content: attr(data-watermark-text);
   position: absolute;
   top: 50%;
@@ -35,6 +36,24 @@
   z-index: 1;
   white-space: nowrap;
   color: rgba(0, 0, 0, 0.2);
+}
+
+/* Image watermark - centered, no repeat */
+.ProseMirror[data-watermark][data-watermark-image]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--watermark-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: var(--watermark-opacity);
+  pointer-events: none;
+  z-index: 1;
+  transform: none;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {

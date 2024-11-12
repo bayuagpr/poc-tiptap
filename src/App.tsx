@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { Preview } from './components/Preview';
 import { extractContent, extractWatermarkDetails } from './utils/editorUtils';
+import { IMAGE_WATERMARK_BASE64 } from './utils/watermarkMock';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
@@ -73,6 +74,8 @@ function App() {
               <Editor 
                 initialContent={extractContent(content)}
                 watermark={extractWatermarkDetails(editorContent)}
+                // enable this to see the watermark image
+                // watermark={{image: IMAGE_WATERMARK_BASE64, opacity: 0.3}}
                 onChange={setEditorContent}
               />
             </Box>
