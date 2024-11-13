@@ -50,12 +50,17 @@ export const wrapContentWithPageConfig = (
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(-45deg);
+          -webkit-transform: translate(-50%, -50%) rotate(-45deg);
+          -moz-transform: translate(-50%, -50%) rotate(-45deg);
+          -ms-transform: translate(-50%, -50%) rotate(-45deg);
+          -o-transform: translate(-50%, -50%) rotate(-45deg);
           font-size: 4em;
           opacity: ${watermark?.opacity ?? 0.3};
           pointer-events: none;
-          z-index: 1;
+          z-index: 0;
           white-space: nowrap;
           color: rgba(0, 0, 0, 0.2);
+          font-family: Arial, sans-serif;
         ">${watermark?.text}</div>
       ` : ''}
         ${watermark?.image ? `
@@ -74,7 +79,7 @@ export const wrapContentWithPageConfig = (
           z-index: 0;
         "></div>
       ` : ''}
-      <div style="position: relative;">
+      <div class="content" style="position: relative;">
         ${content}
       </div>
     </div>
@@ -96,8 +101,15 @@ export const extractWatermarkDetails = (wrappedContent: string): WatermarkConfig
 };
 
 export const extractContent = (wrappedContent: string): string => {
-  const match = wrappedContent.match(/<div style="position: relative;">\s*([\s\S]*?)\s*<\/div>\s*<\/div>$/);
-  return match ? match[1] : '';
+  const match = wrappedContent.match(/<div class="content" style="position: relative;">\s*([\s\S]*?)\s*<\/div>\s*<\/div>$/);
+
+  const result = match ? match[1] : '';
+  
+  console.log('[extractContent] Returning:', {
+    preview: result
+  });
+
+  return result;
 };
 
 export const extractPageDimensions = (wrappedContent: string): PageDimensions | null => {

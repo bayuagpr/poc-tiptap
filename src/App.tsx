@@ -26,12 +26,12 @@ const MOCK_VARIABLES: Variable[] = [
 ];
 
 function App() {
-  const { setVariables, editorContent, setEditorContent, setConfig } = useEditorStore();
+  const { setVariables, editorContent, setEditorContent, setConfig, config } = useEditorStore();
   const [content, setContent] = useState('');
 
   const PADDING = 32;
   // const watermark = { image: IMAGE_WATERMARK_BASE64, opacity: 0.3 };
-  const watermark = extractWatermarkDetails(editorContent)
+  const watermark = extractWatermarkDetails(editorContent) ?? config.watermark;
   const paperSize = 'letter' as const;
   const dpi = 'dpi96' as const;
   const orientation = 'portrait' as const;
@@ -53,7 +53,7 @@ function App() {
     const content = await importFile();
     if (content) {
       setContent(content);
-      setEditorContent(content);
+      setEditorContent(extractContent(content));
     }
   };
 
@@ -105,7 +105,7 @@ function App() {
                 onChange={setEditorContent}
               />
             </Box>
-            {/* <Preview /> */}
+            <Preview />
           </VStack>
           <VStack spacing={8} align="stretch">
             <VariableForm />

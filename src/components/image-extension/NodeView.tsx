@@ -43,6 +43,7 @@ export const LockIcon = () => (
 export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
   const [selected, setSelected] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const editorRef = useRef<HTMLElement | null>(null);
 
   const handleResize = (_: any, __: any, ref: HTMLElement) => {
@@ -75,6 +76,41 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
   useEffect(() => {
     editorRef.current = document.querySelector(".ProseMirror");
   }, []);
+
+  useEffect(() => {
+    if (node.attrs.float && node.attrs.translateY) {
+      setTimeout(() => {
+        const element = imageRef.current;
+        if (element) {
+           // Simulate mousedown, mousemove, and mouseup events
+           const mouseDown = new MouseEvent('mousedown', {
+            bubbles: true,
+            cancelable: true,
+            clientX: 0,
+            clientY: 0
+          });
+          
+          const mouseMove = new MouseEvent('mousemove', {
+            bubbles: true,
+            cancelable: true,
+            clientX: 0,
+            clientY: 0
+          });
+          
+          const mouseUp = new MouseEvent('mouseup', {
+            bubbles: true,
+            cancelable: true,
+            clientX: 0,
+            clientY: 0
+          });
+
+          element.dispatchEvent(mouseDown);
+          element.dispatchEvent(mouseMove);
+          element.dispatchEvent(mouseUp);
+        }
+      }, 0);
+    }
+  }, [node.attrs.float, node.attrs.translateY]);
 
   const Component = node.attrs.float ? Rnd : Resizable;
   const componentProps = node.attrs.float
@@ -155,14 +191,15 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
             });
             if (newFloat) {
               setTimeout(() => {
-                const transform = containerRef.current
-                  ?.querySelector(".react-draggable")
-                  ?.getAttribute("style")
-                  ?.match(/translate\((-?\d+)px,\s*(-?\d+)px\)/);
+                const element = containerRef.current?.querySelector(".react-draggable");
+                const style = element?.getAttribute("style");
+                const transform = style?.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
                 if (transform) {
+                  const translateX = parseInt(transform[1]);
+                  const translateY = parseInt(transform[2]); 
                   updateAttributes({
-                    translateX: parseInt(transform[1]),
-                    translateY: parseInt(transform[2]),
+                    translateX,
+                    translateY,
                   });
                 }
               }, 100);
@@ -201,6 +238,7 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
 
       <Component {...componentProps}>
         <Image
+          ref={imageRef}
           src={node.attrs.src}
           alt={node.attrs.alt}
           title={node.attrs.title}

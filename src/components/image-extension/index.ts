@@ -65,7 +65,17 @@ export default Image.extend({
       float: {
         default: false,
         parseHTML: element => {
-          return element.style.position === 'absolute'
+          const isAbsolute = element.style.position === 'absolute';
+          // if (isAbsolute) {
+          //   setTimeout(() => {
+          //     element.dispatchEvent(new MouseEvent('click', {
+          //       bubbles: true,
+          //       cancelable: true,
+          //       view: window
+          //     }));
+          //   }, 100);
+          // }
+          return isAbsolute
         },
         renderHTML: attributes => {
           if (!attributes.float) return {}
@@ -89,12 +99,16 @@ export default Image.extend({
       top: {
         default: 0,
         parseHTML: element => {
-          return parseInt(element.style.top) || 0
+          const translateY = parseInt(element.getAttribute('data-translateY') || '0');
+          const top = parseInt(element.style.top || '0');
+          return top - translateY; // Subtract translateY to get the actual position
         },
         renderHTML: attributes => {
           if (!attributes.float) return {};
+          const translateY = attributes.translateY || 0;
           return {
-            style: `top: ${attributes.top + attributes.translateY}px;`,
+            style: `top: ${attributes.top + translateY}px;`,
+            'data-translateY': translateY
           }
         }
       },
