@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Editor from './components/Editor';
 import VariableForm from './components/VariableForm';
 import { useEditorStore } from './store/editorStore';
@@ -15,8 +15,9 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { Preview } from './components/Preview';
-import { extractContent, extractWatermarkDetails } from './utils/editorUtils';
+import { extractContent, extractWatermarkDetails, wrapContentWithPageConfig } from './utils/editorUtils';
 import { IMAGE_WATERMARK_BASE64 } from './utils/watermarkMock';
+import { compressImage } from './utils/imageUtils';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
@@ -26,12 +27,28 @@ const MOCK_VARIABLES: Variable[] = [
 ];
 
 function App() {
-  const { setVariables, editorContent, setEditorContent } = useEditorStore();
+  const { setVariables, editorContent, setEditorContent, setConfig } = useEditorStore();
   const [content, setContent] = useState('');
+
+  const PADDING = 32;
+  // const watermark = { image: IMAGE_WATERMARK_BASE64, opacity: 0.3 };
+  const watermark = extractWatermarkDetails(editorContent)
+  const paperSize = 'letter' as const;
+  const dpi = 'dpi96' as const;
+  const orientation = 'portrait' as const;
+
+  const editorConfig = useMemo(() => ({
+    paperSize,
+    dpi,
+    orientation,
+    padding: PADDING,
+    watermark
+  }), []);
 
   useEffect(() => {
     setVariables(MOCK_VARIABLES);
-  }, []);
+    setConfig(editorConfig);
+  }, [editorConfig, setConfig]);
 
   const handleImport = async () => {
     const content = await importFile();
@@ -55,7 +72,16 @@ function App() {
                 Import Template
               </Button>
               <Button
-                onClick={() => saveFile(editorContent)}
+                onClick={() => saveFile(wrapContentWithPageConfig(
+                  editorContent,
+                  {
+                    paperSize: editorConfig.paperSize,
+                    dpi: editorConfig.dpi,
+                    orientation: editorConfig.orientation,
+                    padding: editorConfig.padding
+                  },
+                  editorConfig.watermark
+                ))}
                 colorScheme="blue"
                 _hover={{ bg: 'blue.700' }}
                 _focus={{ ring: 2, ringOffset: 2, ringColor: 'blue.500' }}
@@ -73,13 +99,14 @@ function App() {
             <Box overflow="auto">
               <Editor 
                 initialContent={extractContent(content)}
-                watermark={extractWatermarkDetails(editorContent)}
-                // enable this to see the watermark image
-                // watermark={{image: IMAGE_WATERMARK_BASE64, opacity: 0.3}}
+                paperSize={paperSize}
+                dpi={dpi}
+                orientation={orientation}
+                watermark={watermark}
                 onChange={setEditorContent}
               />
             </Box>
-            <Preview />
+            {/* <Preview /> */}
           </VStack>
           <VStack spacing={8} align="stretch">
             <VariableForm />
