@@ -32,7 +32,7 @@ function App() {
   const PADDING = 32;
   // const watermark = { image: IMAGE_WATERMARK_BASE64, opacity: 0.3 };
   const watermark = extractWatermarkDetails(editorContent) ?? config.watermark;
-  const paperSize = 'letter' as const;
+  const paperSize = 'a4' as const;
   const dpi = 'dpi96' as const;
   const orientation = 'portrait' as const;
 

@@ -26,6 +26,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { paperSizes } from '../utils/paperUtils';
 import { Watermark } from './watermark-extension';
 import { useEffect } from "react";
+import { EDITOR_SCALE_FACTOR } from '../constants/editor';
 
 const CustomTextStyle = TextStyle.extend({
   addAttributes() {
@@ -155,7 +156,11 @@ export const Editor = ({
     <Box w="full" bg="white" borderRadius="lg" boxShadow="lg" overflow="hidden">
       <Toolbar editor={editor} />
       <Flex>
-        <Box padding="2rem" flex="1">
+        <Box padding="2rem" flex="1" style={{
+          transform: `scale(${EDITOR_SCALE_FACTOR})`,
+          transformOrigin: 'top left',
+          width: `${(100 / EDITOR_SCALE_FACTOR)}%`,
+        }}>
           <EditorContent
             editor={editor}
             className="prose max-w-none"

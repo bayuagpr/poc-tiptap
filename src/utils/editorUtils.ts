@@ -34,7 +34,8 @@ export const wrapContentWithPageConfig = (
   return `
     <div style="
       width: ${pageSize.width}px;
-      min-height: ${pageSize.height}px;
+      height: ${pageSize.height}px;
+      max-height: ${pageSize.height}px;
       padding: ${padding}px;
       box-sizing: border-box;
       position: relative;

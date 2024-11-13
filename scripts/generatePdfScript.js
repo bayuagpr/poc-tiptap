@@ -12,7 +12,7 @@ async function main() {
 
   try {
     const html = await fs.readFile(inputPath, 'utf-8');
-    await generatePdf(html, {format: 'Letter'}, outputPath);
+    await generatePdf(html, {format: 'A4'}, outputPath);
     console.log(`PDF generated successfully at ${outputPath}`);
   } catch (error) {
     console.error('Failed to generate PDF:', error);

@@ -1,0 +1,1 @@
+export const EDITOR_SCALE_FACTOR = 0.75; // 75% of original size 

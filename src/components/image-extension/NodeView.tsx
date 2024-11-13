@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Resizable } from "re-resizable";
 import { Rnd } from "react-rnd";
 import { Box, IconButton, Image, Flex } from "@chakra-ui/react";
+import { EDITOR_SCALE_FACTOR } from "../../constants/editor";
 
 interface ImageProps extends NodeViewProps {
   node: any;
@@ -42,6 +43,7 @@ export const LockIcon = () => (
 
 export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
   const [selected, setSelected] = useState(false);
+  const [manualFloat, setManualFloat] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const editorRef = useRef<HTMLElement | null>(null);
@@ -78,7 +80,7 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
   }, []);
 
   useEffect(() => {
-    if (node.attrs.float && node.attrs.translateY) {
+    if (node.attrs.float && node.attrs.translateY && !manualFloat) {
       setTimeout(() => {
         const element = imageRef.current;
         if (element) {
@@ -110,7 +112,7 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
         }
       }, 0);
     }
-  }, [node.attrs.float, node.attrs.translateY]);
+  }, [node.attrs.float, node.attrs.translateY, manualFloat]);
 
   const Component = node.attrs.float ? Rnd : Resizable;
   const componentProps = node.attrs.float
@@ -121,6 +123,7 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
         onResize: handleResize,
         maxWidth: "100%",
         bounds: editorRef.current === null ? undefined : editorRef.current,
+        scale: EDITOR_SCALE_FACTOR,
         size: {
           width: node.attrs.width || "auto",
           height: "auto",
@@ -189,6 +192,7 @@ export const NodeView: React.FC<ImageProps> = ({ node, updateAttributes }) => {
               left: newFloat ? 0 : undefined,
               top: newFloat ? 0 : undefined,
             });
+            setManualFloat(newFloat);
             if (newFloat) {
               setTimeout(() => {
                 const element = containerRef.current?.querySelector(".react-draggable");

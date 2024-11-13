@@ -3,7 +3,15 @@ import {
     promises as fs
 } from 'fs';
 
-function wrapHtmlForPdf(content) {
+function wrapHtmlForPdf(content, format = 'A4') {
+  const pageHeights = {
+    'A3': 1587,
+    'A4': 1123,
+    'A5': 794,
+    'Legal': 1344,
+    'Letter': 1056,
+    'Tabloid': 1632
+  };
   return `
     <!DOCTYPE html>
     <html>
@@ -21,7 +29,9 @@ function wrapHtmlForPdf(content) {
         </style>
       </head>
       <body>
-        ${content}
+        <div style="height: ${pageHeights[format] - 1}px; overflow: hidden;">
+          ${content}
+        </div>
       </body>
     </html>
   `;
@@ -50,7 +60,7 @@ function generatePdf(html, options = {}, outputPath) {
       timeout: 30000,
     };
 
-    pdf.create(wrapHtmlForPdf(html), defaultOptions).toBuffer((err, buffer) => {
+    pdf.create(wrapHtmlForPdf(html, format), defaultOptions).toBuffer((err, buffer) => {
       if (err) {
         reject(err);
         return;
