@@ -17,7 +17,6 @@ import {
 import { Preview } from './components/Preview';
 import { extractContent, extractWatermarkDetails, wrapContentWithPageConfig } from './utils/editorUtils';
 import { IMAGE_WATERMARK_BASE64 } from './utils/watermarkMock';
-import { compressImage } from './utils/imageUtils';
 
 // Mock data for demonstration
 const MOCK_VARIABLES: Variable[] = [
