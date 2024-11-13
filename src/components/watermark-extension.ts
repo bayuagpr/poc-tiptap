@@ -29,32 +29,28 @@ export const Watermark = Extension.create<WatermarkOptions>({
     return {
       setWatermark: (options: Partial<WatermarkOptions>) => ({ editor }) => {
         const watermark = { ...this.options, ...options }
-        editor.view.dom.style.setProperty('--watermark-opacity', watermark.opacity.toString())
+        const dom = editor.view.dom
+        
+        if (dom.style.getPropertyValue('--watermark-opacity') === watermark.opacity.toString() &&
+            ((watermark.image && dom.hasAttribute('data-watermark-image')) ||
+             (watermark.text && dom.getAttribute('data-watermark-text') === watermark.text))) {
+          return false
+        }
+
+        dom.style.setProperty('--watermark-opacity', watermark.opacity.toString())
         
         if (watermark.image) {
-          editor.view.dom.style.setProperty('--watermark-image', `url(${watermark.image})`)
-          editor.view.dom.removeAttribute('data-watermark-text')
-          editor.view.dom.setAttribute('data-watermark-image', '')
+          dom.style.setProperty('--watermark-image', `url(${watermark.image})`)
+          dom.removeAttribute('data-watermark-text')
+          dom.setAttribute('data-watermark-image', '')
         } else if (watermark.text) {
-          editor.view.dom.removeAttribute('data-watermark-image')
-          editor.view.dom.setAttribute('data-watermark-text', watermark.text)
+          dom.removeAttribute('data-watermark-image')
+          dom.setAttribute('data-watermark-text', watermark.text)
         }
         
-        editor.view.dom.setAttribute('data-watermark', '')
+        dom.setAttribute('data-watermark', '')
         return true
       }
-    }
-  },
-
-  onUpdate() {
-    if (this.options.text || this.options.image) {
-      this.editor.commands.setWatermark(this.options)
-    }
-  },
-
-  onSelectionUpdate() {
-    if (this.options.text || this.options.image) {
-      this.editor.commands.setWatermark(this.options)
     }
   }
 }) 

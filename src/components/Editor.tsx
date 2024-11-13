@@ -24,7 +24,6 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Box, Flex } from "@chakra-ui/react";
 import { paperSizes } from '../utils/paperUtils';
-import { wrapContentWithPageConfig } from '../utils/editorUtils';
 import { Watermark } from './watermark-extension';
 import { useEffect } from "react";
 
@@ -60,6 +59,7 @@ interface EditorProps {
   initialContent?: string;
   onChange?: (content: string) => void;
 }
+
 export const Editor = ({ 
   paperSize = 'letter',
   dpi = 'dpi96',
@@ -71,7 +71,7 @@ export const Editor = ({
     `,
   onChange
 }: EditorProps) => {
-  const PADDING = 32; // 2rem = 32px
+  const PADDING = 32;
 
   const dimensions = paperSizes[paperSize].pixels[dpi];
   const pageSize = {
@@ -134,13 +134,7 @@ export const Editor = ({
     },
     content,
     onUpdate: ({ editor }) => {
-      const wrappedContent = wrapContentWithPageConfig(editor.getHTML(), {
-        paperSize,
-        dpi,
-        orientation,
-        padding: PADDING
-      }, watermark.text, watermark.opacity);
-      onChange?.(wrappedContent);
+      onChange?.(editor.getHTML());
     },
     editorProps: {
       attributes: {
